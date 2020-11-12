@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Launch the Devastator in an empty world simulation -->
+<launch>
+<!-- Position parameters -->
+  <arg name="model" default="model"/>
+  <arg name="x_pos" default="0.0"/>
+  <arg name="y_pos" default="0.0"/>
+  <arg name="z_pos" default="0.0"/>
+<!-- World choice and configuration -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="verbose" value="true"/>
+    <arg name="world_name" value="$(find mydrone)/worlds/empty_world.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+  <!-- loads the controllers -->
+  <!-- Find model and launch it as 'gazebo_ros' node -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find mydrone)/models/cube/$(arg model).sdf" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_sdf"  output="screen" args="-sdf -model $(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description" />
+  
+<!-- OTHER NODES -->
+ <!-- <node pkg="mydrone" name="realsense" type="realsense.py" output="screen"/> -->
+ <!-- <node pkg="mydrone" name="head" type="move_head.py" output="screen"/> -->
+
+  <!-- <node pkg="mydrone" name="force" type="force.py" output="screen"/> -->
+  <!--<node name="image_view1" pkg="image_view" type="image_view" respawn="false" output="log">
+  <remap from="image" to="/camera/color/image_raw" />
+  </node>-->
+  <!-- <node pkg="mydrone" name="wandering" type="wandering.py" output="screen"/> -->
+  <!-- <node pkg="mydrone" name="controller" type="controller.py" output="screen"/> -->
+
+  <!-- <node pkg="mydrone" name="light" type="light.py" output="screen"/>  -->
+  
+</launch>
