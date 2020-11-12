@@ -11,10 +11,15 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  sensor_msgs
+  image_transport
+  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(gazebo REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system)
+# find_package(Protobuf REQUIRED)
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -93,6 +98,19 @@ find_package(catkin REQUIRED COMPONENTS
 #   cfg/DynReconf2.cfg
 # )
 
+include_directories(
+# include
+  ${catkin_INCLUDE_DIRS}
+)
+link_directories(${OpenCV_INCLUDE_DIR} 
+${Boost_INCLUDE_DIR}
+${catkin_INCLUDE_DIRS}
+${GAZEBO_INCLUDE_DIRS}
+## Declare a C++ library
+# add_library(${PROJECT_NAME}
+#   src/${PROJECT_NAME}/mydrone.cpp
+ )
+ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -103,10 +121,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES mydrone
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
+   INCLUDE_DIRS plugins
+   CATKIN_DEPENDS roscpp rospy image_transport std_msgs sensor_msgs geometry_msgs message_runtime
 )
 
 ###########
@@ -115,15 +131,26 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
-)
+# include_directories(
+# # include
+#   ${catkin_INCLUDE_DIRS}
+# )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/mydrone.cpp
 # )
+add_library( plugin_drone SHARED
+    plugin/plugin_drone.cpp
+    plugin/pid_controller.cpp
+    plugin/plugin_drone.h
+    plugin/pid_controller.h
+)
+
+target_link_libraries( plugin_drone
+   ${catkin_LIBRARIES}
+   ${GAZEBO_LIBRARIES}
+)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
