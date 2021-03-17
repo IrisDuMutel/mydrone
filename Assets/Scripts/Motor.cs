@@ -27,10 +27,35 @@ public class Motor : MonoBehaviour
         float UpForceTotal = UpForceThrottle;
         UpForceTotal -= mainController.Computer.PitchCorrection * PitchFactor;
         UpForceTotal -= mainController.Computer.RollCorrection * RollFactor;
+
+        UpForce = UpForceTotal;
+        Debug.Log(UpForce);
+
+        SideForce = PreNormalize(mainController.Controller.Yaw, YawFactor);
+        SpeedPropeller = Mathf.Lerp(SpeedPropeller, UpForce * 2500.0f, Time.deltaTime);
+        UpdatePropeller(SpeedPropeller);
     }
-    // Update is called once per frame
-    void Update()
+    
+
+    public void UpdatePropeller(float speed)
     {
-        
+        Propeller.transform.Rotate(0.0f, 0.0f, speed * 2 * Time.deltaTime);
+    }
+
+    private float PreNormalize(float input, float factor)
+    {
+        float finalValue = input;
+
+        if (InvertDirection)
+            finalValue = Mathf.Clamp(finalValue, -1, 0);
+        else
+            finalValue = Mathf.Clamp(finalValue, 0, 1);
+        return finalValue * (YawFactor);
+    }
+
+    public void Reset()
+    {
+        UpForce = 0.0f;
+        SideForce = 0.0f;
     }
 }
