@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-//using UnityEngine;
-//using System.Collections;
-//using UnityEngine.Networking;
+using System.Collections;
+using UnityEngine.Networking;
 
 public class BasicControl : MonoBehaviour
 {

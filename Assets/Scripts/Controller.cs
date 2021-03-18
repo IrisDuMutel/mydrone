@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Used by BasicControl.cs
+// This script is in charge of getting the commands from user and saving them inside
+// its own variables for later use.
 public class Controller : MonoBehaviour
 {
     public bool isAgentControl = false; // For when using RL

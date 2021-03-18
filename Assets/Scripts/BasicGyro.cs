@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
-// used by ComputerModule.cs
-// Basic gyroscope simulator.  Uses the zero and identity to calculate.  This one suffers from gimball lock effect
+
+// Basic gyroscope simulator.  Uses the zero and identity to calculate.  This one suffre from gimball lock effect
 [System.Serializable]
 public class BasicGyro
 {

@@ -1,20 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-// Module reuniting computing parts of a drone.  Used by a BasicControl.
+using System.Collections;
 
+// Module reuniting computing parts of a drone.  Used by a BasicControl.
 public class ComputerModule : MonoBehaviour
 {
     [Header("Settings")]
-    [Range(0, 90)] public float PitchLimit; //Variable limited within range
-    [Range(0, 90)] public float RollLimit; //Variable limited within range
+    [Range(0, 90)] public float PitchLimit;
+    [Range(0, 90)] public float RollLimit;
 
     [Header("Parts")]
     public PID PidThrottle;
-    public PID PidRoll;
     public PID PidPitch;
+    public PID PidRoll;
     public BasicGyro Gyro;
+
 
     [Header("Values")]
     public float PitchCorrection;
@@ -23,11 +23,19 @@ public class ComputerModule : MonoBehaviour
 
     public void UpdateComputer(float ControlPitch, float ControlRoll, float ControlHeight)
     {
+        //		string cp = ControlPitch.ToString();
+        //		int ip = int.Parse (cp);
+        //		string cr = ControlRoll.ToString();
+        //		int ir = int.Parse (cr);
         UpdateGyro();
         PitchCorrection = PidPitch.Update(ControlPitch * PitchLimit, Gyro.Pitch, Time.deltaTime);
-        RollCorrection = PidRoll.Update(ControlRoll * RollLimit, Gyro.Roll, Time.deltaTime);
+        RollCorrection = PidRoll.Update(Gyro.Roll, ControlRoll * RollLimit, Time.deltaTime);
         HeightCorrection = PidThrottle.Update(ControlHeight, Gyro.VelocityVector.y, Time.deltaTime);
+    }
 
+    public void UpdateGyro()
+    {
+        Gyro.UpdateGyro(transform);
     }
 
     public void Reset()
@@ -40,9 +48,5 @@ public class ComputerModule : MonoBehaviour
         PidPitch.Reset();
         PidRoll.Reset();
         PidThrottle.Reset();
-    }
-    public void UpdateGyro()
-    {
-        Gyro.UpdateGyro(transform);
     }
 }
